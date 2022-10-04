@@ -87,6 +87,8 @@ npm audit
 npm run webpack 
 ```
 
+If the install gives you trouble about hashes for a git repo, just keep rerunning and it'll resolve itself. 
+
 #### Seed Data
 ```bash
 rails r "Site.create( name: 'iNaturalist', url: 'http://localhost:3000' )"
@@ -114,6 +116,7 @@ Then
 - update the hosts for redis and postgres to be `host.docker.internal`
 
 ```bash
+nvm install
 npm install 
 node app.js
 ```
