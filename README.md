@@ -143,7 +143,7 @@ docker commit inaturalist_webapp_base_container inaturalist_webapp_updated/lates
 docker commit inaturalist_redis_base inaturalist_redis/latest
 docker commit inaturalist_es_base inaturalist_es/latest
 docker commit inaturalist_memcached_base inaturalist_memcached/latest
-docker commit inaturalist_pg_base inaturalist_pg_base/latest
+docker commit inaturalist_pg_base inaturalist_pg/latest
 ```
 
 ### Updating the WebApp Image EntryPoint
@@ -205,4 +205,31 @@ You can test the image with:
 
 ```bash
 docker run -p 4000:4000 inaturalist_api/latest
+```
+
+## Pushing the Images to DockerHub
+
+```bash
+docker login
+```
+
+
+### Tag the Images
+```bash
+docker tag inaturalist_webapp/latest mgietzmann/inaturalist_webapp:latest
+docker tag inaturalist_api/latest mgietzmann/inaturalist_api:latest
+docker tag inaturalist_redis/latest mgietzmann/inaturalist_redis:latest
+docker tag inaturalist_es/latest mgietzmann/inaturalist_es:latest
+docker tag inaturalist_memcached/latest mgietzmann/inaturalist_memcached:latest
+docker tag inaturalist_pg/latest mgietzmann/inaturalist_pg:latest
+```
+
+### Push the Images
+```bash
+docker push mgietzmann/inaturalist_webapp:latest
+docker push mgietzmann/inaturalist_api:latest
+docker push mgietzmann/inaturalist_redis:latest
+docker push mgietzmann/inaturalist_es:latest
+docker push mgietzmann/inaturalist_memcached:latest
+docker push mgietzmann/inaturalist_pg:latest
 ```
