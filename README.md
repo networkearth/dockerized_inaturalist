@@ -254,3 +254,34 @@ And the api with:
 ```bash
 docker run -p 4000:4000 mgietzmann/inaturalist_api:latest
 ```
+
+## Some Notes
+
+```ruby
+opts = {
+    :login => 'quire',
+    :email => 'quire@example.com',
+    :password => 'quire69',
+    :password_confirmation => 'quire69'
+}
+u = User.new(opts)
+u.save
+u
+```
+
+```bash
+rails r my_file.rb
+```
+
+Also look to unittests to see how things get run. 
+
+
+```ruby
+opts = {
+    :name => 'my_app',
+    :redirect_uri => 'http://localhost:5000'
+}
+app = OauthApplication.new(opts)
+app.save
+app
+```
