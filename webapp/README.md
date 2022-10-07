@@ -2,8 +2,19 @@
 
 ### Building the Base Image
 ```bash
-docker build -t inaturalist_webapp_base/latest  -f DockerfileBase .
+docker build -t inaturalist_webapp_base/latest -f DockerfileBase .
 ```
+
+### Starting the Supporting Services
+iNaturalist depends on a few other applications for which we'll be making images as well. To get the base images up and running for modification go to the `supporting` directory of `dockerized_inaturalist` and run the following:
+```bash
+docker-compose build --parallel es memcached redis pg
+docker-compose up es memcached redis pg
+```
+
+(Note that you'll want these to be fresh so good idea to just run a `docker-compose rm` to check)
+
+You'll need to wait until the services are up and running.
 
 ### Setting up iNaturalist on the Base Container
 Note that as iNaturalist gets setup it also sets up the database and elasticsearch, so you'll need to set these things up concurrently.
@@ -78,6 +89,10 @@ rake db:schema:load
 #### Setting up ElasticSearch
 Update `config/config.yml` to have
 ```yml
+elasticsearch: 'http://host.docker.internal:4000'
+```
+
+```yml
 elasticsearch_host: http://host.docker.internal:9200
 ```
 
@@ -119,4 +134,25 @@ and then navigate to `http://localhost:3000` in your browser!
 ### Commit the Updated Container to an Image
 ```bash
 docker commit inaturalist_webapp_base_container inaturalist_webapp_updated/latest
+```
+
+### Commit the Updated Supporting Containers to Images
+```bash
+docker commit inaturalist_redis_base inaturalist_redis/latest
+docker commit inaturalist_es_base inaturalist_es/latest
+docker commit inaturalist_memcached_base inaturalist_memcached/latest
+docker commit inaturalist_pg_base inaturalist_pg_base/latest
+```
+
+### Updating the WebApp Image EntryPoint
+We've got a container with everything in it, but now we need to build an image that will actuall start our app for us. From within the `webapp` directory of `dockerized_inaturalist` run:
+
+```bash
+docker build -t inaturalist_webapp/latest -f DockerfileFinal .
+```
+
+You can test the image with:
+
+```bash
+docker run -p 3000:3000 inaturalist_webapp/latest
 ```
