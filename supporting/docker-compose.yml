@@ -5,6 +5,8 @@ services:
     image: redis:6.0.3
     ports:
       - 6379:6379
+    volumes:
+      - ~/inaturalist_volumes/redis:/data
 
   es:
     container_name: inaturalist_es_base
@@ -17,6 +19,8 @@ services:
       /bin/sh -c "bin/elasticsearch-plugin list | grep -q analysis-kuromoji
       || bin/elasticsearch-plugin install analysis-kuromoji;
       /usr/local/bin/docker-entrypoint.sh"
+    volumes:
+      - ~/inaturalist_volumes/es:/usr/share/elasticsearch/data
 
   memcached:
     container_name: inaturalist_memcached_base
@@ -32,3 +36,5 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
+    volumes:
+      - ~/inaturalist_volumes/pg:/var/lib/postgresql/data

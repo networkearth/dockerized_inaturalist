@@ -91,7 +91,7 @@ rake db:schema:load
 #### Setting up ElasticSearch
 Update `config/config.yml` to have
 ```yml
-elasticsearch: 'http://host.docker.internal:4000'
+elasticsearch: http://host.docker.internal:4000
 ```
 
 ```yml
@@ -145,6 +145,16 @@ docker commit inaturalist_es_base inaturalist_es/latest
 docker commit inaturalist_memcached_base inaturalist_memcached/latest
 docker commit inaturalist_pg_base inaturalist_pg/latest
 ```
+
+### Commit the Volumes
+Most of what we just did to the supporting containers shows up in their respective data volumes. So if we're going to keep those around we need to tar those up and commit them to git. Specifically the volumes are in the `~/inaturalist_volumes` directory. So once you've shut down the services (so nothing's being updated while you tar things up) you can go ahead and run:
+
+```bash
+cd ~/
+tar -czf inaturalist_volumes.tar.gz inaturalist_volumes
+```
+
+Then move the tar into this repository and commit it. 
 
 ### Updating the WebApp Image EntryPoint
 We've got a container with everything in it, but now we need to build an image that will actuall start our app for us. From within the `webapp` directory of `dockerized_inaturalist` run:
@@ -232,4 +242,21 @@ docker push mgietzmann/inaturalist_redis:latest
 docker push mgietzmann/inaturalist_es:latest
 docker push mgietzmann/inaturalist_memcached:latest
 docker push mgietzmann/inaturalist_pg:latest
+```
+
+## Building the Full Service
+Now that we've built all the pieces we can go ahead and tie them together!
+
+Move to `~/` place the `inaturalist_volumes.tar.gz` file there and run (making sure that `inaturalist_volumes` doesn't exist):
+```bash
+tar -xzvf inaturalist_volumes.tar.gz
+```
+
+This will recreate the volumes needed by the databases.
+
+Going back to the `service` directory of `dockerized_inaturalist` run:
+
+```bash
+docker-compose build --parallel es memcached redis pg
+docker-compose up es memcached redis pg
 ```
