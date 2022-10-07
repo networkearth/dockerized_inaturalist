@@ -138,14 +138,6 @@ and then navigate to `http://localhost:3000` in your browser!
 docker commit inaturalist_webapp_base_container inaturalist_webapp_updated/latest
 ```
 
-### Commit the Updated Supporting Containers to Images
-```bash
-docker commit inaturalist_redis_base inaturalist_redis/latest
-docker commit inaturalist_es_base inaturalist_es/latest
-docker commit inaturalist_memcached_base inaturalist_memcached/latest
-docker commit inaturalist_pg_base inaturalist_pg/latest
-```
-
 ### Commit the Volumes
 Most of what we just did to the supporting containers shows up in their respective data volumes. So if we're going to keep those around we need to tar those up and commit them to git. Specifically the volumes are in the `~/inaturalist_volumes` directory. So once you've shut down the services (so nothing's being updated while you tar things up) you can go ahead and run:
 
@@ -228,20 +220,12 @@ docker login
 ```bash
 docker tag inaturalist_webapp/latest mgietzmann/inaturalist_webapp:latest
 docker tag inaturalist_api/latest mgietzmann/inaturalist_api:latest
-docker tag inaturalist_redis/latest mgietzmann/inaturalist_redis:latest
-docker tag inaturalist_es/latest mgietzmann/inaturalist_es:latest
-docker tag inaturalist_memcached/latest mgietzmann/inaturalist_memcached:latest
-docker tag inaturalist_pg/latest mgietzmann/inaturalist_pg:latest
 ```
 
 ### Push the Images
 ```bash
 docker push mgietzmann/inaturalist_webapp:latest
 docker push mgietzmann/inaturalist_api:latest
-docker push mgietzmann/inaturalist_redis:latest
-docker push mgietzmann/inaturalist_es:latest
-docker push mgietzmann/inaturalist_memcached:latest
-docker push mgietzmann/inaturalist_pg:latest
 ```
 
 ## Building the Full Service
@@ -254,9 +238,19 @@ tar -xzvf inaturalist_volumes.tar.gz
 
 This will recreate the volumes needed by the databases.
 
-Going back to the `service` directory of `dockerized_inaturalist` run:
+Going back to the `supporting` directory of `dockerized_inaturalist` run:
 
 ```bash
 docker-compose build --parallel es memcached redis pg
 docker-compose up es memcached redis pg
+```
+
+Now you can run the app with:
+```bash
+docker run -p 3000:3000 mgietzmann/inaturalist_webapp:latest
+```
+
+And the api with:
+```bash
+docker run -p 4000:4000 mgietzmann/inaturalist_api:latest
 ```
