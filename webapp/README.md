@@ -1,4 +1,6 @@
-# Building the iNaturalist WebApp
+# Building iNaturalist as a Service
+
+## Building the iNaturalist WebApp
 
 ### Building the Base Image
 ```bash
@@ -155,4 +157,52 @@ You can test the image with:
 
 ```bash
 docker run -p 3000:3000 inaturalist_webapp/latest
+```
+
+## Building the iNaturalist API
+
+### Building the Base Image
+From within the `api` directory of `dockerized_inaturalist` run:
+
+```bash
+docker build -t inaturalist_api_base/latest -f DockerfileBase .
+```
+
+### Setting up the Config
+
+Start up the base container with:
+
+```bash
+docker run --name inaturalist_api_base_container -p 4000:4000 -it inaturalist_api_base/latest
+```
+
+Update the hosts in `config.js` to point to `host.docker.internal` for all the services and the webapp. Also change the DB password to be `password` and user to be `username`.
+
+### Setting up Node
+```bash
+nvm install
+npm install
+```
+
+You can try it out by running:
+```bash
+node app.js
+```
+
+and then navigating to `http://localhost:4000` on your browser.
+
+### Committing the Updated Image
+```bash
+docker commit inaturalist_api_base_container inaturalist_api_updated/latest
+```
+
+### Building the Final Image
+```bash
+docker build -t inaturalist_api/latest -f DockerfileFinal .
+```
+
+You can test the image with:
+
+```bash
+docker run -p 4000:4000 inaturalist_api/latest
 ```
