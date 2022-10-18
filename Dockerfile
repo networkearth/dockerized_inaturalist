@@ -1,5 +1,4 @@
 FROM ubuntu:20.04
-MAINTAINER "Marcel Gietzmann-Sanders" "marcelsanders96@gmail.com"
 
 # prevent input prompts
 ENV DEBIAN_FRONTEND noninteractive
