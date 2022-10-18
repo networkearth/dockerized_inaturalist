@@ -125,6 +125,12 @@ rake inaturalist:generate_translations_js
 
 You'll get lots of translation warning messages, but no need to worry.
 
+#### Allowing Access to the API
+Add the following to the end of `config/environments/development.rb`:
+```bash
+config.hosts << "host.docker.internal"
+```
+
 #### Testing it Out
 
 Run the following:
@@ -272,8 +278,6 @@ u
 ```bash
 rails r my_file.rb
 ```
-
-Also look to unittests to see how things get run. 
 
 
 ```ruby
