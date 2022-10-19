@@ -121,6 +121,7 @@ npm run webpack
 ```bash
 rails r "Site.create( name: 'iNaturalist', url: 'http://localhost:3000' )"
 rake inaturalist:generate_translations_js
+rails r tools/load_iconic_taxa.rb
 ```
 
 You'll get lots of translation warning messages, but no need to worry.
